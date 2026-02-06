@@ -7,18 +7,18 @@ Assembly entry • CRC32 validation • Portable HAL • QEMU reference for real
 
 Fast, minimal, open-source RISC-V bootloaders for ESP32-C3 and similar hardware — production-ready in days, fully auditable, no proprietary lock-in.
 
-This is the **QEMU-validated reference implementation** — a clean base for porting to real RISC-V MCUs like the Waveshare ESP32-C3 Zero (with onboard RGB LED signaling, in progress).
+This is the **QEMU-validated reference implementation** — a clean base for porting to real RISC-V MCUs.
 
 ## Why this bootloader?
 
 - **Auditability & simplicity**: C99 + assembly, no dynamic allocation, no interrupts, no frameworks — explicit and readable code.
 - **Clear separation**: Bootloader / Application / Board-specific code fully isolated.
 - **Portability**: Hardware abstraction layer (HAL) makes adaptation fast and safe.
-- **Bottom-up approach**: Validated in QEMU virt → designed for real hardware (ESP32-C3 port coming soon).
+- **Bottom-up approach**: Validated in QEMU virt → designed for real hardware.
 - **Ownership**: Full source delivered — you control and adapt everything.
 
 Perfect for:
-- Hardware startups prototyping IoT devices with ESP32-C3
+- Hardware startups prototyping IoT devices
 - Small OEMs with custom boards needing controlled boot behavior
 - Makers & labs moving from Arduino to production-grade firmware
 - Consultancies building complete firmware stacks
@@ -88,16 +88,14 @@ CRC? OK
 REBOOT
 ```
 
-## Porting to Real Hardware (e.g. ESP32-C3)
+## Porting to Real Hardware
 
-- Create `boards/<your_board>/` (e.g. `esp32c3_waveshare_zero`)
+- Create `boards/<your_board>/`
 - Implement `platform.c` with HAL functions from `include/boot.h` (`uart_init()`, `uart_putc()`, etc.)
 - Optional: GPIO/LED init for signaling
 - Adjust `linker/memory.ld` for real flash/RAM map
 - Update `Makefile` for new target
 - Build & flash with `esptool.py` / OpenOCD
-
-ESP32-C3 port in progress: Waveshare ESP32-C3 Zero with onboard WS2812 RGB LED (bootloader blue → app green signaling).
 
 ## Status
 
@@ -107,7 +105,7 @@ ESP32-C3 port in progress: Waveshare ESP32-C3 Zero with onboard WS2812 RGB LED (
 
 Need it tailored to your board?
 
-- UART/USB firmware update for ESP32-C3
+- UART/USB firmware update for your specific hardware
 - GPIO recovery trigger
 - Custom LED patterns for status
 - Quick delivery (1–3 days) with full source ownership
