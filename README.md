@@ -1,17 +1,16 @@
 # riscv-bootloader
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
-[![RISC-V](https://img.shields.io/badge/RISC--V-Ready-0068B5?style=flat-square&logo=riscv)](https://riscv.org/)
+[![Build Status](https://github.com/ElToroDM/riscv-bootloader/actions/workflows/build.yml/badge.svg?style=flat-square)](https://github.com/ElToroDM/riscv-bootloader/actions)
+[![RISC-V Ready](https://img.shields.io/badge/RISC--V-Ready-0068B5?style=flat-square&logo=riscv)](https://riscv.org/)
 [![Bare Metal](https://img.shields.io/badge/Bare%20Metal-Yes-critical?style=flat-square)](https://github.com/ElToroDM/riscv-bootloader)
+
 [![QEMU Validated](https://img.shields.io/badge/QEMU-Validated-success?style=flat-square&logo=qemu)](https://www.qemu.org/)
-[![Bootloader Size ~6KB](https://img.shields.io/badge/Bootloader%20Size-%3C6KB-blue?style=flat-square)](https://github.com/ElToroDM/riscv-bootloader)
-[![Custom Ports - ESP32--C3](https://img.shields.io/badge/Custom%20Ports-ESP32C3-FF8800?style=flat-square&logo=espressif)](https://github.com/ElToroDM/riscv-bootloader)
-[![Contact for Paid Ports](https://img.shields.io/badge/Contact-Paid%20Ports-brightgreen?style=flat-square)](https://github.com/ElToroDM/riscv-bootloader/issues)
-[![Build Status](https://github.com/ElToroDM/riscv-bootloader/actions/workflows/build.yml/badge.svg)](https://github.com/ElToroDM/riscv-bootloader/actions/workflows/build.yml)
+[![Size ~6KB](https://img.shields.io/badge/Size-%3C6KB-blue?style=flat-square)](https://github.com/ElToroDM/riscv-bootloader)
+[![ESP32-C3 Ports](https://img.shields.io/badge/Ports-ESP32C3-FF8800?style=flat-square&logo=espressif)](https://github.com/ElToroDM/riscv-bootloader)
+[![Custom Paid Ports](https://img.shields.io/badge/Custom-Paid%20Ports-brightgreen?style=flat-square)](https://github.com/ElToroDM/riscv-bootloader/issues)
 
 **Minimal bare-metal RISC-V UART bootloader**  
 Assembly entry • CRC32 validation • Portable HAL • QEMU reference for fast real-hardware ports (ESP32-C3 ready)
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 - Fast, minimal, open-source RISC-V bootloaders — production-ready in days, fully auditable, no proprietary lock-in.  
 - This QEMU-validated reference is your clean, portable starting point for custom ESP32-C3 or similar MCUs.
