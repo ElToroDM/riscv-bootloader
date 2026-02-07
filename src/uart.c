@@ -1,12 +1,22 @@
 #include "boot.h"
 
-/* Wrapper for platform-specific UART */
+/*
+ * UART Abstraction Layer
+ * 
+ * Provides generic UART interface with terminal-friendly formatting
+ * Delegates hardware control to platform-specific implementation
+ */
 
 void uart_init(void) {
-    platform_init();
+    /* Early platform initialization (clocks, power, etc.) */
+    platform_early_init();
+    
+    /* UART-specific hardware setup */
+    platform_uart_init();
 }
 
 void uart_putc(char c) {
+    /* Normalize line endings for terminal compatibility */
     if (c == '\n') {
         platform_uart_putc('\r');
     }

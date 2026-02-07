@@ -5,7 +5,7 @@
 static void print_banner(void) {
     uart_puts("\n\r======================================\n\r");
     uart_puts("   Professional RISC-V Bootloader    \n\r");
-    uart_puts("   Target: QEMU Virt (RV32IM)        \n\r");
+    uart_puts("   Target: " PLATFORM_NAME "        \n\r");
     uart_puts("======================================\n\r");
 }
 
@@ -78,9 +78,12 @@ static void uart_update(void) {
     header.size = size;
     header.version = 1;
 
-    /* Erase App area */
+    /* Erase App area using HAL */
     uart_puts("ERASING...\n\r");
-    platform_flash_erase(APP_BASE, size + sizeof(fw_header_t));
+    if (flash_erase_app() != 0) {
+        uart_puts("ERR: ERASE\n\r");
+        return;
+    }
 
     /* Receive raw binary and write to flash */
     uart_puts("READY\n\r");
@@ -92,8 +95,11 @@ static void uart_update(void) {
     /* Calculate CRC of received data */
     header.crc32 = crc32((const uint8_t *)(APP_BASE + sizeof(fw_header_t)), size);
     
-    /* Write header last for atomicity */
-    platform_flash_write(APP_BASE, &header, sizeof(fw_header_t));
+    /* Write header last for atomicity using HAL */
+    if (flash_write_header(&header) != 0) {
+        uart_puts("ERR: HEADER\n\r");
+        return;
+    }
 
     uart_puts("CRC?\n\r");
     uart_puts("OK\n\r");
