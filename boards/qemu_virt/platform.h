@@ -22,4 +22,7 @@
 /* Platform Identification */
 #define PLATFORM_NAME       "QEMU Virt (RV32IM)"
 
+/* Demo UX: run application directly after successful update in QEMU. */
+#define PLATFORM_DIRECT_BOOT_AFTER_UPDATE 1
+
 #endif /* PLATFORM_H */

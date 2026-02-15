@@ -13,10 +13,10 @@
 
 static void print_banner(void) {
     /* Small human-friendly banner printed at boot */
-    uart_puts("\n\r======================================\n\r");
-    uart_puts("   Professional RISC-V Bootloader    \n\r");
-    uart_puts("   Target: " PLATFORM_NAME "        \n\r");
-    uart_puts("======================================\n\r");
+    uart_puts("======================================\n");
+    uart_puts("   Professional RISC-V Bootloader    \n");
+    uart_puts("   Target: " PLATFORM_NAME "        \n");
+    uart_puts("======================================\n");
 }
 
 /*
@@ -29,20 +29,20 @@ static int validate_app(void) {
     
     /* Basic header sanity checks */
     if (header->magic != BOOT_MAGIC) {
-        uart_puts("Error: Invalid magic number\n\r");
+        uart_puts("Error: Invalid magic number\n");
         return -1;
     }
     
     /* Ensure reported size fits within the application partition */
     if (header->size == 0 || header->size > APP_MAX_SIZE - sizeof(fw_header_t)) {
-        uart_puts("Error: Invalid firmware size\n\r");
+        uart_puts("Error: Invalid firmware size\n");
         return -1;
     }
     
     /* Compute CRC and compare with header CRC */
     uint32_t calc_crc = crc32((const uint8_t *)(APP_BASE + sizeof(fw_header_t)), header->size);
     if (calc_crc != header->crc32) {
-        uart_puts("Error: CRC mismatch\n\r");
+        uart_puts("Error: CRC mismatch\n");
         return -1;
     }
     
@@ -56,8 +56,9 @@ static int validate_app(void) {
  * - In a real loader you might: flush caches, disable interrupts, remap vectors
  */
 static void jump_to_app(void) {
-    uart_puts("Jumping to application...\n\r");
-    
+    uart_puts("Jumping to application...\n");
+    uart_puts("APP_HANDOFF\n");
+
     /* The application entry point is right after the header */
     void (*app_entry)(void) = (void (*)(void))(APP_BASE + sizeof(fw_header_t));
     
@@ -83,13 +84,13 @@ static void jump_to_app(void) {
 static void uart_update(void) {
     uint32_t size = 0;
 
-    uart_puts("OK\n\r");
+    uart_puts("OK\n");
     
     /* Expecting "SEND " literal (very simple parser) */
     const char *cmd = "SEND ";
     for (int j = 0; j < 5; j++) {
         if (uart_getc() != cmd[j]) {
-            uart_puts("ERR: CMD\n\r");
+            uart_puts("ERR: CMD\n");
             return;
         }
     }
@@ -105,7 +106,7 @@ static void uart_update(void) {
     
     /* Validate reported size against partition limits */
     if (size == 0 || size > APP_MAX_SIZE - sizeof(fw_header_t)) {
-        uart_puts("ERR: SIZE\n\r");
+        uart_puts("ERR: SIZE\n");
         return;
     }
 
@@ -116,14 +117,14 @@ static void uart_update(void) {
     header.version = 1;
 
     /* Erase application partition via HAL (may be time-consuming) */
-    uart_puts("ERASING...\n\r");
+    uart_puts("ERASING...\n");
     if (flash_erase_app() != 0) {
-        uart_puts("ERR: ERASE\n\r");
+        uart_puts("ERR: ERASE\n");
         return;
     }
 
     /* Receive payload. QEMU: writes directly to memory for simplicity. */
-    uart_puts("READY\n\r");
+    uart_puts("READY\n");
     uint8_t *dest = (uint8_t *)(APP_BASE + sizeof(fw_header_t));
     for (uint32_t j = 0; j < size; j++) {
         /* Blocking read per byte; keep it simple and deterministic */
@@ -135,16 +136,21 @@ static void uart_update(void) {
     
     /* Write header last to mark a valid firmware image atomically */
     if (flash_write_header(&header) != 0) {
-        uart_puts("ERR: HEADER\n\r");
+        uart_puts("ERR: HEADER\n");
         return;
     }
 
-    uart_puts("CRC?\n\r");
-    uart_puts("OK\n\r");
-    uart_puts("REBOOT\n\r");
-    
+    uart_puts("CRC?\n");
+    uart_puts("OK\n");
+    uart_puts("REBOOT\n");
+
+#if PLATFORM_DIRECT_BOOT_AFTER_UPDATE
+    /* QEMU demo flow: jump directly so UART can show app output immediately. */
+    jump_to_app();
+#else
     /* Perform system reset using platform abstraction */
     platform_reset();
+#endif
 }
 
 int main(void) {
@@ -152,12 +158,15 @@ int main(void) {
     uart_init();
     print_banner();
 
-    uart_puts("BOOT?\n\r");
+    uart_puts("BOOT?\n");
     
     /* Wait for user decision. Echo character to improve UX over serial. */
     while(1) {
         char choice = uart_getc();
         uart_putc(choice); /* Echo for visibility */
+        if (choice != '\r' && choice != '\n') {
+            uart_puts("\n");
+        }
 
         if (choice == 'u' || choice == 'U') {
             /* Enter firmware update mode */
@@ -176,7 +185,7 @@ int main(void) {
         jump_to_app();
     } else {
         /* If no valid app, stay in recovery mode and allow updates */
-        uart_puts("Recovery Loop: No valid app found. Press 'u' to update.\n\r");
+        uart_puts("Recovery Loop: No valid app found. Press 'u' to update.\n");
         while(1) {
             if (uart_getc() == 'u') {
                 uart_update();

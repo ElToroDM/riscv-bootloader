@@ -29,6 +29,16 @@ make qemu       # Run in QEMU
 python3 test_validator.py    # Protocol validation test
 ```
 
+**Run live visual validation (Windows PowerShell):**
+```powershell
+.\scripts\run-test-with-uart-tail.ps1
+```
+
+**Demo capture mode (for terminal recording/GIF preparation):**
+```powershell
+.\scripts\run-test-with-uart-tail.ps1 -DemoMode
+```
+
 **Expected output:** Bootloader waits for UART input, displays `BOOT?`
 
 > 📖 **Detailed setup instructions:** See [SETUP.md](SETUP.md)

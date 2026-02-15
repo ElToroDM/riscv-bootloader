@@ -1,0 +1,33 @@
+======================================
+   Professional RISC-V Bootloader    
+   Target: QEMU Virt (RV32IM)        
+======================================
+BOOT?
+u
+OK
+ERASING...
+READY
+CRC?
+OK
+REBOOT
+Jumping to application...
+APP_HANDOFF
+APP_BOOT
+========================================
+   Test Application Running
+   Successfully handed off from bootloader!
+========================================
+Runtime Info:
+  XLEN:       32 bits
+  Endianness: Little
+  UART0:      0x10000000
+Memory Layout:
+  app_main:   0x800101AC
+  Stack (SP): 0x8011FFE0
+  Heap start: 0x80010771
+  Stack margin: ~1112175 bytes
+ISA Profile:
+  MISA:       0x40101105
+  Extensions: A,C,I,M,U
+  Hart ID:    0
+App: online

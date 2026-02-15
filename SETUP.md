@@ -91,6 +91,30 @@ BOOT?
 
 Press `Ctrl+C` in the terminal to stop QEMU.
 
+### Visual Live Test Runner (Recommended for demos)
+
+Use the PowerShell wrapper to run protocol validation while tailing UART output in a dedicated window:
+
+```powershell
+.\scripts\run-test-with-uart-tail.ps1
+```
+
+Useful options:
+
+```powershell
+.\scripts\run-test-with-uart-tail.ps1 -DemoMode    # prints recording-oriented layout hints
+.\scripts\run-test-with-uart-tail.ps1 -NoTail      # run only validator output in current terminal
+.\scripts\run-test-with-uart-tail.ps1 -LiveOnly    # remove UART mirror file at exit
+```
+
+Recommended terminal layout for recordings (side by side):
+
+1. Run `.\scripts\run-test-with-uart-tail.ps1 -DemoMode`
+2. Use Windows Snap: press `Win + Left` on the main terminal and `Win + Right` on the UART tail window
+3. Keep both windows at similar size (around 120x36) and record only the central area
+
+In `-DemoMode`, protocol steps are intentionally paced so you can narrate what is happening (`BOOT?`, enter update mode, erase, upload, CRC, reboot, app boot).
+
 **Alternative (Command Line):**
 ```powershell
 make all        # Build bootloader
