@@ -5,6 +5,7 @@ build/
 *.bin
 *.map
 *.o
+.log
 
 # Python tools cache
 __pycache__/

@@ -34,7 +34,7 @@ function Write-Step {
     Write-Host "▶ $Message" -ForegroundColor $Color
 }
 
-function Escape-SingleQuoted {
+function ConvertTo-EscapedSingleQuote {
     param([string]$Text)
     return $Text.Replace("'", "''")
 }
@@ -56,8 +56,8 @@ if (Test-Path $logPath) {
     Remove-Item $logPath -Force
 }
 
-$escapedRepoRoot = Escape-SingleQuoted $repoRoot
-$escapedLogPath = Escape-SingleQuoted $logPath
+$escapedRepoRoot = ConvertTo-EscapedSingleQuote $repoRoot
+$escapedLogPath = ConvertTo-EscapedSingleQuote $logPath
 
 $tailProcess = $null
 if (-not $NoTail) {
@@ -75,11 +75,11 @@ if (-not $NoTail) {
         "Get-Content '$escapedLogPath' -Wait"
     ) -join "; "
 
-    Start-Process -FilePath "pwsh" -ArgumentList @(
+    $tailProcess = Start-Process -FilePath "pwsh" -ArgumentList @(
         "-NoExit",
         "-Command",
         $tailCommand
-    ) -PassThru | ForEach-Object { $tailProcess = $_ }
+    ) -PassThru
 }
 
 $pythonLauncher = $null
