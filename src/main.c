@@ -93,7 +93,7 @@ static void jump_to_app(void) {
 static void uart_update(void) {
     uint32_t size = 0;
 
-    emit_bl_evt("UPDATE_CHECK");
+    emit_bl_evt("APP_CRC_CHECK");
     uart_puts("OK\n");
     
     /* Expecting "SEND " literal (very simple parser) */
@@ -117,7 +117,7 @@ static void uart_update(void) {
     /* Validate reported size against partition limits */
     if (size == 0 || size > APP_MAX_SIZE - sizeof(fw_header_t)) {
         uart_puts("ERR: SIZE\n");
-        emit_bl_evt("UPDATE_VERIFY_FAIL");
+        emit_bl_evt("APP_CRC_FAIL");
         return;
     }
 
@@ -131,7 +131,7 @@ static void uart_update(void) {
     uart_puts("ERASING...\n");
     if (flash_erase_app() != 0) {
         uart_puts("ERR: ERASE\n");
-        emit_bl_evt("UPDATE_VERIFY_FAIL");
+        emit_bl_evt("APP_CRC_FAIL");
         return;
     }
 
@@ -149,11 +149,11 @@ static void uart_update(void) {
     /* Write header last to mark a valid firmware image atomically */
     if (flash_write_header(&header) != 0) {
         uart_puts("ERR: HEADER\n");
-        emit_bl_evt("UPDATE_VERIFY_FAIL");
+        emit_bl_evt("APP_CRC_FAIL");
         return;
     }
 
-    emit_bl_evt("UPDATE_VERIFY_OK");
+    emit_bl_evt("APP_CRC_OK");
 
     uart_puts("CRC?\n");
     uart_puts("OK\n");
@@ -198,10 +198,14 @@ int main(void) {
     }
 
     /* Validate the on-flash application and jump if valid */
+    emit_bl_evt("DECISION_NORMAL");
+    emit_bl_evt("APP_CRC_CHECK");
     if (validate_app() == 0) {
+        emit_bl_evt("APP_CRC_OK");
         jump_to_app();
     } else {
         /* If no valid app, stay in recovery mode and allow updates */
+        emit_bl_evt("APP_CRC_FAIL");
         emit_bl_evt("DECISION_RECOVERY");
         uart_puts("Recovery Loop: No valid app found. Press 'u' to update.\n");
         while(1) {

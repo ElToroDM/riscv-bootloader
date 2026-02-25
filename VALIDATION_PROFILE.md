@@ -20,10 +20,13 @@ Purpose: define canonical validation defaults and PASS/FAIL criteria for this re
 ### T1 Normal handoff
 Required:
 
-1. `BL_EVT:LOAD_APP`
-2. `BL_EVT:HANDOFF`
-3. `BL_EVT:HANDOFF_APP`
-4. `APP_EVT:START`
+1. `BL_EVT:DECISION_NORMAL`
+2. `BL_EVT:APP_CRC_CHECK`
+3. `BL_EVT:APP_CRC_OK`
+4. `BL_EVT:LOAD_APP`
+5. `BL_EVT:HANDOFF`
+6. `BL_EVT:HANDOFF_APP`
+7. `APP_EVT:START`
 
 ### T2 Recovery path
 Required:
@@ -34,13 +37,13 @@ Required:
 ### T3 Update integrity pass
 Required:
 
-- `BL_EVT:UPDATE_CHECK`
-- `BL_EVT:UPDATE_VERIFY_OK`
+- `BL_EVT:APP_CRC_CHECK`
+- `BL_EVT:APP_CRC_OK`
 
 ### T4 Update integrity fail
 Required:
 
-- `BL_EVT:UPDATE_VERIFY_FAIL`
+- `BL_EVT:APP_CRC_FAIL`
 - no handoff to invalid payload
 
 ## 4. Evidence artifacts per release
